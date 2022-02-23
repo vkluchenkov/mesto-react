@@ -3,7 +3,7 @@ import avatarImg from "../images/Ava.jpg";
 import { api } from "../utils/Api";
 import { Card } from "./Card";
 
-export const Main = ({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) => {
+export function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
   const [userName, setUserName] = useState("");
   const [userDescription, setUserDescription] = useState("");
   const [userAvatar, setUserAvatar] = useState(avatarImg);
@@ -59,4 +59,4 @@ export const Main = ({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) =
       </section>
     </main>
   );
-};
+}
