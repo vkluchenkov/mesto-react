@@ -1,4 +1,4 @@
-export const Card = ({ card, onCardClick }) => {
+export function Card({ card, onCardClick }) {
   const handleClick = () => {
     onCardClick(card);
   };
@@ -16,4 +16,4 @@ export const Card = ({ card, onCardClick }) => {
       </div>
     </li>
   );
-};
+}

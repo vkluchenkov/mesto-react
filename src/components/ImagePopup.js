@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-export const ImagePopup = ({ onClose, card }) => {
+export function ImagePopup({ onClose, card }) {
   const handleEscClose = (e) => e.key === "Escape" && onClose(e);
 
   useEffect(() => {
@@ -23,4 +23,4 @@ export const ImagePopup = ({ onClose, card }) => {
       </figure>
     </div>
   );
-};
+}
