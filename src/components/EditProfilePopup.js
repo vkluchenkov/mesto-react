@@ -43,6 +43,7 @@ export const EditProfilePopup = ({ isOpen, onClose, onUserUpdate }) => {
       title="Редактировать профиль"
       name="edit_profile"
       onSubmit={submitHandler}
+      buttonLabel="Сохранить"
     >
       <div className="popup__field-wrapper">
         <input
@@ -55,7 +56,7 @@ export const EditProfilePopup = ({ isOpen, onClose, onUserUpdate }) => {
           minLength="2"
           maxLength="40"
           onChange={handleChange}
-          value={name}
+          value={name || ""}
         />
         <p className="popup__error input-name-error"></p>
       </div>
@@ -70,7 +71,7 @@ export const EditProfilePopup = ({ isOpen, onClose, onUserUpdate }) => {
           minLength="2"
           maxLength="200"
           onChange={handleChange}
-          value={description}
+          value={description || ""}
         />
         <p className="popup__error input-about-error"></p>
       </div>

@@ -40,14 +40,15 @@ function App() {
 
     api
       .toggleLike(card._id, hasMyLike)
-      .then((newCard) => setCards((state) => state.map((c) => (c._id === card._id ? newCard : c))));
+      .then((newCard) => setCards((state) => state.map((c) => (c._id === card._id ? newCard : c))))
+      .catch((err) => console.log(err));
   };
 
   const handleCardDelete = (card) =>
     api
       .deleteCard(card._id)
       .then(() => {
-        setCards(cards.filter((c) => c._id != card._id));
+        setCards((state) => state.filter((c) => c._id != card._id));
       })
       .catch((err) => console.log(err));
 
@@ -67,22 +68,28 @@ function App() {
   const handleUserUpdate = (user) =>
     api
       .patchMe(user)
-      .then((res) => setCurrentUser(res))
-      .then(() => setIsEditProfilePopupOpen(false))
+      .then((res) => {
+        setCurrentUser(res);
+        setIsEditProfilePopupOpen(false);
+      })
       .catch((err) => console.log(err));
 
   const handleAvatarUpdate = ({ avatar }) =>
     api
       .patchAvatar(avatar)
-      .then((user) => setCurrentUser(user))
-      .then(() => setIsEditAvatarPopupOpen(false))
+      .then((user) => {
+        setCurrentUser(user);
+        setIsEditAvatarPopupOpen(false);
+      })
       .catch((err) => console.log(err));
 
   const handleAddPlaceSubmit = (cardPayload) =>
     api
       .postCard(cardPayload)
-      .then((newCard) => setCards([newCard, ...cards]))
-      .then(() => setIsAddPlacePopupOpen(false))
+      .then((newCard) => {
+        setCards([newCard, ...cards]);
+        setIsAddPlacePopupOpen(false);
+      })
       .catch((err) => console.log(err));
 
   return (

@@ -31,6 +31,7 @@ export const AddPlacePopup = ({ isOpen, onClose, onAddCard }) => {
       onSubmit={submitHandler}
       title="Добавить место"
       name="add_place"
+      buttonLabel="Сохранить"
     >
       <div className="popup__field-wrapper">
         <input

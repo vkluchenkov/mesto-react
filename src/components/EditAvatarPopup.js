@@ -9,6 +9,7 @@ export const EditAvatarPopup = ({ isOpen, onClose, onAvatarUpdate }) => {
     onAvatarUpdate({
       avatar: avatarRef.current.value,
     });
+    avatarRef.current.value = "";
   };
 
   return (
@@ -18,6 +19,7 @@ export const EditAvatarPopup = ({ isOpen, onClose, onAvatarUpdate }) => {
       onSubmit={submitHandler}
       title="Обновить аватар"
       name="new_avatar_form"
+      buttonLabel="Сохранить"
     >
       <div className="popup__field-wrapper">
         <input
