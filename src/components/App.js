@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import "../index.css";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { Main } from "./Main";
@@ -9,6 +8,7 @@ import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import { api } from "../utils/Api";
 import { EditProfilePopup } from "./EditProfilePopup";
 import { EditAvatarPopup } from "./EditAvatarPopup";
+import { AddPlacePopup } from "./AddPlacePopup";
 
 function App() {
   // States
@@ -17,12 +17,15 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
+  const [cards, setCards] = useState([]);
 
   // Effects
   useEffect(() => {
-    api
-      .getMe()
-      .then((res) => setCurrentUser(res))
+    Promise.all([api.getMe(), api.getCards()])
+      .then(([user, cards]) => {
+        setCurrentUser(user);
+        setCards(cards);
+      })
       .catch((error) => console.log(error));
   }, []);
 
@@ -31,6 +34,22 @@ function App() {
   const handleEditProfileClick = () => setIsEditProfilePopupOpen(true);
   const handleAddPlaceClick = () => setIsAddPlacePopupOpen(true);
   const handleCardClick = (card) => setSelectedCard(card);
+
+  const handleCardLike = (card) => {
+    const hasMyLike = card.likes.some((like) => like._id === currentUser._id);
+
+    api
+      .toggleLike(card._id, hasMyLike)
+      .then((newCard) => setCards((state) => state.map((c) => (c._id === card._id ? newCard : c))));
+  };
+
+  const handleCardDelete = (card) =>
+    api
+      .deleteCard(card._id)
+      .then(() => {
+        setCards(cards.filter((c) => c._id != card._id));
+      })
+      .catch((err) => console.log(err));
 
   const closeAllPopups = (e) => {
     if (
@@ -59,6 +78,13 @@ function App() {
       .then(() => setIsEditAvatarPopupOpen(false))
       .catch((err) => console.log(err));
 
+  const handleAddPlaceSubmit = (cardPayload) =>
+    api
+      .postCard(cardPayload)
+      .then((newCard) => setCards([newCard, ...cards]))
+      .then(() => setIsAddPlacePopupOpen(false))
+      .catch((err) => console.log(err));
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <Header />
@@ -67,6 +93,9 @@ function App() {
         onEditAvatar={handleEditAvatarClick}
         onEditProfile={handleEditProfileClick}
         onCardClick={handleCardClick}
+        cards={cards}
+        onCardDelete={handleCardDelete}
+        onCardLike={handleCardLike}
       />
       <Footer />
       <EditProfilePopup
@@ -75,39 +104,10 @@ function App() {
         onUserUpdate={handleUserUpdate}
       />
 
-      <PopupWithForm
+      <AddPlacePopup
         isOpen={isAddPlacePopupOpen}
         onClose={closeAllPopups}
-        title="Добавить место"
-        name="add_place"
-        children={
-          <>
-            <div className="popup__field-wrapper">
-              <input
-                type="text"
-                className="popup__input"
-                id="place-name"
-                name="placeName"
-                placeholder="Название"
-                required
-                minLength="2"
-                maxLength="30"
-              />
-              <p className="popup__error place-name-error"></p>
-            </div>
-            <div className="popup__field-wrapper">
-              <input
-                className="popup__input"
-                id="place-link"
-                name="placeLink"
-                placeholder="Ссылка на картинку"
-                type="url"
-                required
-              />
-              <p className="popup__error place-link-error"></p>
-            </div>
-          </>
-        }
+        onAddCard={handleAddPlaceSubmit}
       />
 
       <EditAvatarPopup

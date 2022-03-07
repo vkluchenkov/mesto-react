@@ -18,22 +18,19 @@ export const EditAvatarPopup = ({ isOpen, onClose, onAvatarUpdate }) => {
       onSubmit={submitHandler}
       title="Обновить аватар"
       name="new_avatar_form"
-      children={
-        <>
-          <div className="popup__field-wrapper">
-            <input
-              className="popup__input"
-              id="avatar-link"
-              name="avatarLink"
-              placeholder="Ссылка на картинку"
-              type="url"
-              required
-              ref={avatarRef}
-            />
-            <p className="popup__error avatar-link-error"></p>
-          </div>
-        </>
-      }
-    />
+    >
+      <div className="popup__field-wrapper">
+        <input
+          className="popup__input"
+          id="avatar-link"
+          name="avatarLink"
+          placeholder="Ссылка на картинку"
+          type="url"
+          required
+          ref={avatarRef}
+        />
+        <p className="popup__error avatar-link-error"></p>
+      </div>
+    </PopupWithForm>
   );
 };

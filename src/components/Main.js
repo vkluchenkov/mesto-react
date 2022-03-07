@@ -3,36 +3,16 @@ import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import { api } from "../utils/Api";
 import { Card } from "./Card";
 
-export function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
-  // Hooks
+export function Main({
+  onEditProfile,
+  onAddPlace,
+  onEditAvatar,
+  onCardClick,
+  cards,
+  onCardLike,
+  onCardDelete,
+}) {
   const currentUser = useContext(CurrentUserContext);
-
-  // States
-  const [cards, setCards] = useState([]);
-
-  useEffect(() => {
-    api
-      .getCards()
-      .then((res) => setCards(res))
-      .catch((error) => console.log(error));
-  }, []);
-
-  // Handlers
-  const handleCardLike = (card) => {
-    const hasMyLike = card.likes.some((like) => like._id === currentUser._id);
-
-    api
-      .toggleLike(card._id, hasMyLike)
-      .then((newCard) => setCards((state) => state.map((c) => (c._id === card._id ? newCard : c))));
-  };
-
-  const handleCardDelete = (card) =>
-    api
-      .deleteCard(card._id)
-      .then(() => {
-        setCards(cards.filter((c) => c._id != card._id));
-      })
-      .catch((err) => console.log(err));
 
   const section = () => {
     if (cards.length > 0) {
@@ -40,8 +20,8 @@ export function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
         <Card
           card={card}
           onCardClick={onCardClick}
-          onLikeClick={handleCardLike}
-          onDeleteClick={handleCardDelete}
+          onLikeClick={onCardLike}
+          onDeleteClick={onCardDelete}
           key={`card${card._id}`}
         />
       ));
