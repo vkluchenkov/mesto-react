@@ -55,17 +55,9 @@ class Api {
   }
 
   // Returns card
-  putLike(cardId) {
+  toggleLike(cardId, hasMyLike) {
     return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
-      method: "PUT",
-      headers: this._headers,
-    }).then((res) => this._resHandler(res));
-  }
-
-  // Returns card
-  deleteLike(cardId) {
-    return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
-      method: "DELETE",
+      method: `${hasMyLike ? "DELETE" : "PUT"}`,
       headers: this._headers,
     }).then((res) => this._resHandler(res));
   }

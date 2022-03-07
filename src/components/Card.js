@@ -1,7 +1,14 @@
-export function Card({ card, onCardClick }) {
-  const handleClick = () => {
-    onCardClick(card);
-  };
+import { useContext } from "react";
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
+
+export function Card({ card, onCardClick, onLikeClick }) {
+  const currentUser = useContext(CurrentUserContext);
+
+  const isOwner = card.owner._id === currentUser._id;
+  const hasMyLike = card.likes.some((like) => like._id === currentUser._id);
+
+  const handleClick = () => onCardClick(card);
+  const handleLikeClick = () => onLikeClick(card);
 
   return (
     <li className="place">
@@ -9,10 +16,14 @@ export function Card({ card, onCardClick }) {
       <div className="place__info">
         <h2 className="place__name">{card.name}</h2>
         <div className="place__like_container">
-          <button className="place__like" type="button"></button>
+          <button
+            className={hasMyLike ? "place__like place__like_active" : "place__like"}
+            type="button"
+            onClick={handleLikeClick}
+          ></button>
           <p className="place__like_counter">{card.likes.length}</p>
         </div>
-        <button className="place__trash" type="button"></button>
+        {isOwner ? <button className="place__trash" type="button"></button> : <></>}
       </div>
     </li>
   );
