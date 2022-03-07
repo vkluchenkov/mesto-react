@@ -13,27 +13,17 @@ export function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
   useEffect(() => {
     api
       .getCards()
-      .then((res) => {
-        setCards(res);
-      })
+      .then((res) => setCards(res))
       .catch((error) => console.log(error));
   }, []);
-
-  // useEffect(() => {
-  //   console.log(cards);
-  // }, [cards]);
 
   // Handlers
   const handleCardLike = (card) => {
     const hasMyLike = card.likes.some((like) => like._id === currentUser._id);
 
-    api.toggleLike(card._id, hasMyLike).then((newCard) => {
-      setCards((state) =>
-        state.map((c) => {
-          return c._id === card._id ? newCard : c;
-        })
-      );
-    });
+    api
+      .toggleLike(card._id, hasMyLike)
+      .then((newCard) => setCards((state) => state.map((c) => (c._id === card._id ? newCard : c))));
   };
 
   const handleCardDelete = (card) =>
@@ -70,7 +60,7 @@ export function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
             <h1 className="title__name">{currentUser?.name}</h1>
             <button type="button" className="title__name-edit" onClick={onEditProfile}></button>
           </div>
-          <p className="title__description">{currentUser?.description}</p>
+          <p className="title__description">{currentUser?.about}</p>
         </div>
         <button className="title__button" type="button" onClick={onAddPlace}></button>
       </section>

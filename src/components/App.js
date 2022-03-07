@@ -7,6 +7,8 @@ import { PopupWithForm } from "./PopupWithForm";
 import { ImagePopup } from "./ImagePopup";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import { api } from "../utils/Api";
+import { EditProfilePopup } from "./EditProfilePopup";
+import { EditAvatarPopup } from "./EditAvatarPopup";
 
 function App() {
   // States
@@ -43,6 +45,20 @@ function App() {
     }
   };
 
+  const handleUserUpdate = (user) =>
+    api
+      .patchMe(user)
+      .then((res) => setCurrentUser(res))
+      .then(() => setIsEditProfilePopupOpen(false))
+      .catch((err) => console.log(err));
+
+  const handleAvatarUpdate = ({ avatar }) =>
+    api
+      .patchAvatar(avatar)
+      .then((user) => setCurrentUser(user))
+      .then(() => setIsEditAvatarPopupOpen(false))
+      .catch((err) => console.log(err));
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <Header />
@@ -53,41 +69,10 @@ function App() {
         onCardClick={handleCardClick}
       />
       <Footer />
-      <PopupWithForm
+      <EditProfilePopup
         isOpen={isEditProfilePopupOpen}
         onClose={closeAllPopups}
-        title="Редактировать профиль"
-        name="edit_profile"
-        children={
-          <>
-            <div className="popup__field-wrapper">
-              <input
-                type="text"
-                className="popup__input"
-                id="input-name"
-                name="newName"
-                placeholder="Имя"
-                required
-                minLength="2"
-                maxLength="40"
-              />
-              <p className="popup__error input-name-error"></p>
-            </div>
-            <div className="popup__field-wrapper">
-              <input
-                type="text"
-                className="popup__input"
-                id="input-about"
-                name="newAbout"
-                placeholder="Профессия"
-                required
-                minLength="2"
-                maxLength="200"
-              />
-              <p className="popup__error input-about-error"></p>
-            </div>
-          </>
-        }
+        onUserUpdate={handleUserUpdate}
       />
 
       <PopupWithForm
@@ -125,27 +110,12 @@ function App() {
         }
       />
 
-      <PopupWithForm
+      <EditAvatarPopup
         isOpen={isEditAvatarPopupOpen}
         onClose={closeAllPopups}
-        title="Обновить аватар"
-        name="new_avatar_form"
-        children={
-          <>
-            <div className="popup__field-wrapper">
-              <input
-                className="popup__input"
-                id="avatar-link"
-                name="avatarLink"
-                placeholder="Ссылка на картинку"
-                type="url"
-                required
-              />
-              <p className="popup__error avatar-link-error"></p>
-            </div>
-          </>
-        }
+        onAvatarUpdate={handleAvatarUpdate}
       />
+
       <ImagePopup onClose={closeAllPopups} card={selectedCard} />
     </CurrentUserContext.Provider>
   );

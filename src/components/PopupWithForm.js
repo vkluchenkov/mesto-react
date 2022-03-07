@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-export function PopupWithForm({ title, name, children, isOpen, onClose }) {
+export function PopupWithForm({ title, name, children, isOpen, onClose, onSubmit }) {
   const handleEscClose = (e) => e.key === "Escape" && onClose(e);
 
   useEffect(() => {
@@ -17,7 +17,7 @@ export function PopupWithForm({ title, name, children, isOpen, onClose }) {
     >
       <div className="popup__container">
         <h2 className="popup__title">{title}</h2>
-        <form name={name} className="popup__form" noValidate>
+        <form name={name} className="popup__form" noValidate onSubmit={onSubmit}>
           {children}
           <button className="popup__submit-button" type="submit">
             Сохранить
