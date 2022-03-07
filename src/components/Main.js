@@ -19,14 +19,30 @@ export function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
       .catch((error) => console.log(error));
   }, []);
 
+  // useEffect(() => {
+  //   console.log(cards);
+  // }, [cards]);
+
   // Handlers
   const handleCardLike = (card) => {
     const hasMyLike = card.likes.some((like) => like._id === currentUser._id);
 
     api.toggleLike(card._id, hasMyLike).then((newCard) => {
-      setCards((state) => state.map((c) => (c._id === card._id ? newCard : c)));
+      setCards((state) =>
+        state.map((c) => {
+          return c._id === card._id ? newCard : c;
+        })
+      );
     });
   };
+
+  const handleCardDelete = (card) =>
+    api
+      .deleteCard(card._id)
+      .then(() => {
+        setCards(cards.filter((c) => c._id != card._id));
+      })
+      .catch((err) => console.log(err));
 
   const section = () => {
     if (cards.length > 0) {
@@ -35,6 +51,7 @@ export function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
           card={card}
           onCardClick={onCardClick}
           onLikeClick={handleCardLike}
+          onDeleteClick={handleCardDelete}
           key={`card${card._id}`}
         />
       ));
@@ -45,15 +62,15 @@ export function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
     <main className="content">
       <section className="title">
         <div className="title__image-container">
-          <img src={currentUser.avatar} alt="Изображение профиля" className="title__image" />
+          <img src={currentUser?.avatar} alt="Изображение профиля" className="title__image" />
           <div className="title__image-overlay" onClick={onEditAvatar}></div>
         </div>
         <div className="title__titles">
           <div className="title__name-wrapper">
-            <h1 className="title__name">{currentUser.name}</h1>
+            <h1 className="title__name">{currentUser?.name}</h1>
             <button type="button" className="title__name-edit" onClick={onEditProfile}></button>
           </div>
-          <p className="title__description">{currentUser.description}</p>
+          <p className="title__description">{currentUser?.description}</p>
         </div>
         <button className="title__button" type="button" onClick={onAddPlace}></button>
       </section>
